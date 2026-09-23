@@ -1,9 +1,7 @@
 import { Component, AfterViewInit, ViewChild } from '@angular/core';
 import { Platform, ToastController } from '@ionic/angular';
-// import {
-//   Base64ToGallery,
-//   Base64ToGalleryOptions,
-// } from '@ionic-native/base64-to-gallery/ngx';
+import { Capacitor } from '@capacitor/core';
+import { Directory, Filesystem } from '@capacitor/filesystem';
 
 @Component({
   selector: 'app-home',
@@ -33,7 +31,7 @@ export class HomePage implements AfterViewInit {
   constructor(
     private plt: Platform,
     // private base64ToGallery: Base64ToGallery,
-    private toastCtrl: ToastController
+    private toastCtrl: ToastController,
   ) {}
 
   ngAfterViewInit() {
@@ -123,7 +121,7 @@ export class HomePage implements AfterViewInit {
         0,
         0,
         this.canvasElement.width,
-        this.canvasElement.height
+        this.canvasElement.height,
       );
     };
   }
@@ -133,22 +131,59 @@ export class HomePage implements AfterViewInit {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   }
 
-  exportCanvasImage() {
-    const dataUrl = this.canvasElement.toDataURL();
-    this.clearCanvas();
-    if (this.plt.is('cordova')) {
-      // TODO: Rework this section with capacitor
-      console.log("Cordova not yet implemented!")
-    } else {
-      var data = dataUrl.split(',')[1];
-      let blob = this.b64toBlob(data, 'image/png');
+  async exportCanvasImage() {
+    const dataUrl = this.canvasElement.toDataURL('image/png');
+    const base64Data = dataUrl.split(',')[1];
 
-      var a = window.document.createElement('a');
-      a.href = window.URL.createObjectURL(blob);
-      a.download = 'canvasimage.png';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+
+    const fileName = `canvas-${timestamp}.png`;
+    const filePath = `CanvasDrawer/${fileName}`;
+
+    try {
+      if (Capacitor.isNativePlatform()) {
+        const result = await Filesystem.writeFile({
+          path: filePath,
+          data: base64Data,
+          directory: Directory.Documents,
+          recursive: true,
+        });
+
+        console.log('Canvas saved:', result.uri);
+
+        const toast = await this.toastCtrl.create({
+          message: `Saved ${fileName} to Documents/CanvasDrawer`,
+          duration: 3000,
+          position: 'bottom',
+        });
+
+        await toast.present();
+      } else {
+        const blob = this.b64toBlob(base64Data, 'image/png');
+        const url = window.URL.createObjectURL(blob);
+
+        const a = window.document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        window.URL.revokeObjectURL(url);
+      }
+
+      this.clearCanvas();
+    } catch (error) {
+      console.error('Could not export canvas image:', error);
+
+      const toast = await this.toastCtrl.create({
+        message: 'Could not save canvas image.',
+        duration: 3000,
+        position: 'bottom',
+      });
+
+      await toast.present();
     }
   }
 
