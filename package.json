@@ -1,8 +1,8 @@
 {
-  "name": "painter-app",
+  "name": "canvas-drawer",
   "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "https://ionicframework.com/",
+  "author": "Jonny Ramen Labs",
+  "homepage": "https://jonathanperry.me/",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -62,5 +62,10 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "typescript": "~5.2.2"
   },
-  "description": "An Ionic project"
+  "description": "A cross-platform Ionic drawing app for sketching and creating artwork on an HTML canvas",
+  "allowScripts": {
+    "esbuild@0.20.1": true,
+    "esbuild@0.19.12": true,
+    "nx@18.2.1": true
+  }
 }

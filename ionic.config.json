@@ -1,5 +1,5 @@
 {
-  "name": "painter-app",
+  "name": "canvas-drawer",
   "integrations": {
     "capacitor": {}
   },
