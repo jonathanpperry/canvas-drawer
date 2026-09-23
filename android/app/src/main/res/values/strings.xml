@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Canvas Drawing</string>
-    <string name="title_activity_main">Canvas Drawing</string>
-    <string name="package_name">io.jonnyramen.canvasdrawing</string>
-    <string name="custom_url_scheme">io.jonnyramen.canvasdrawing</string>
+    <string name="app_name">Canvas Drawer</string>
+    <string name="title_activity_main">Canvas Drawer</string>
+    <string name="package_name">io.jonnyramen.canvasdrawer</string>
+    <string name="custom_url_scheme">io.jonnyramen.canvasdrawer</string>
 </resources>

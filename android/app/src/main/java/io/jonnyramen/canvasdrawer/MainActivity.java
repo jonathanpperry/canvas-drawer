@@ -1,4 +1,4 @@
-package io.jonnyramen.canvasdrawing;
+package io.jonnyramen.canvasdrawer;
 
 import com.getcapacitor.BridgeActivity;
 
